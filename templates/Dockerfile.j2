@@ -1,0 +1,7 @@
+FROM telegraf:{{ telegraf_version }}
+
+{% if groups['telegraf-fail2ban'] is defined %}
+    {% if inventory_hostname in groups['telegraf-fail2ban'] %}
+RUN apk add --no-cache fail2ban
+    {% endif %}
+{% endif %}

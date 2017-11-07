@@ -1098,8 +1098,8 @@
 
 
 # # Read metrics from fail2ban.
-{% if groups['telegraf-fail2ban'] is defined %}
-    {% if inventory_hostname in groups["telegraf-fail2ban"] %}
+{% if groups['fail2ban'] is defined %}
+    {% if inventory_hostname in groups["fail2ban"] %}
 [[inputs.fail2ban]]
   ## Use sudo to run fail2ban-client
   use_sudo = false

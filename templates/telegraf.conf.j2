@@ -1947,36 +1947,39 @@
 
 
 # # Reads metrics from RabbitMQ servers via the Management Plugin
-# [[inputs.rabbitmq]]
-#   ## Management Plugin url. (default: http://localhost:15672)
-#   # url = "http://localhost:15672"
-#   ## Tag added to rabbitmq_overview series; deprecated: use tags
-#   # name = "rmq-server-1"
-#   ## Credentials
-#   # username = "guest"
-#   # password = "guest"
-#
-#   ## Optional SSL Config
-#   # ssl_ca = "/etc/telegraf/ca.pem"
-#   # ssl_cert = "/etc/telegraf/cert.pem"
-#   # ssl_key = "/etc/telegraf/key.pem"
-#   ## Use SSL but skip chain & host verification
-#   # insecure_skip_verify = false
-#
-#   ## Optional request timeouts
-#   ##
-#   ## ResponseHeaderTimeout, if non-zero, specifies the amount of time to wait
-#   ## for a server's response headers after fully writing the request.
-#   # header_timeout = "3s"
-#   ##
-#   ## client_timeout specifies a time limit for requests made by this client.
-#   ## Includes connection time, any redirects, and reading the response body.
-#   # client_timeout = "4s"
-#
-#   ## A list of nodes to pull metrics about. If not specified, metrics for
-#   ## all nodes are gathered.
-#   # nodes = ["rabbit@node1", "rabbit@node2"]
+{% if telegraf_plugins is defined %}
+{% if 'rabbit' in telegraf_plugins %}
+[[inputs.rabbitmq]]
+  ## Management Plugin url. (default: http://localhost:15672)
+  url = "http://{{ ansible_default_ipv4.address }}:{{ telegraf_rabbit_port }}"
+  ## Tag added to rabbitmq_overview series; deprecated: use tags
+  # name = "rmq-server-1"
+  ## Credentials
+  username = "{{ telegraf_rabbit_user }}"
+  password = "{{ telegraf_rabbit_pass }}"
 
+  ## Optional SSL Config
+  # ssl_ca = "/etc/telegraf/ca.pem"
+  # ssl_cert = "/etc/telegraf/cert.pem"
+  # ssl_key = "/etc/telegraf/key.pem"
+  ## Use SSL but skip chain & host verification
+  # insecure_skip_verify = false
+
+  ## Optional request timeouts
+  ##
+  ## ResponseHeaderTimeout, if non-zero, specifies the amount of time to wait
+  ## for a server's response headers after fully writing the request.
+  header_timeout = "3s"
+  ##
+  ## client_timeout specifies a time limit for requests made by this client.
+  ## Includes connection time, any redirects, and reading the response body.
+  client_timeout = "4s"
+
+  ## A list of nodes to pull metrics about. If not specified, metrics for
+  ## all nodes are gathered.
+  # nodes = ["rabbit@node1", "rabbit@node2"]
+{% endif %}
+{% endif %}
 
 # # Read raindrops stats (raindrops - real-time stats for preforking Rack servers)
 # [[inputs.raindrops]]

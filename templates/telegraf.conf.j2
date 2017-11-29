@@ -13,7 +13,6 @@
 # them with $. For strings the variable must be within quotes (ie, "$STR_VAR"),
 # for numbers and booleans they should be plain (ie, $INT_VAR, $BOOL_VAR)
 
-
 # Global tags can be specified here in key="value" format.
 [global_tags]
   team = "{{ team_tag }}"
@@ -1102,12 +1101,12 @@
 
 
 # # Read metrics from fail2ban.
-{% if groups['fail2ban'] is defined %}
-    {% if inventory_hostname in groups["fail2ban"] %}
+{% if telegraf_plugins is defined %}
+{% if 'fail2ban' in telegraf_plugins %}
 [[inputs.fail2ban]]
   ## Use sudo to run fail2ban-client
   use_sudo = false
-    {% endif %}
+{% endif %}
 {% endif %}
 
 
@@ -1689,7 +1688,7 @@
 #   # no configuration
 
 {% if telegraf_plugins is defined %}
-{% if 'nginx' in telegraf_plugins nginx_url is defined %}
+{% if 'nginx' in telegraf_plugins and nginx_url is defined %}
 # # Read Nginx's basic status information (ngx_http_stub_status_module)
 
 [[inputs.nginx]]
@@ -1808,8 +1807,8 @@
 
 
 # # Read metrics from one or many postgresql servers
-{% if telegraf_postgres is defined %}
-{% if telegraf_postgres %}
+{% if telegraf_plugins is defined %}
+{% if 'postgres' in telegraf_plugins %}
 [[inputs.postgresql]]
   ## specify address via a url matching:
   ##   postgres://[pqgotest[:password]]@localhost[/dbname]\

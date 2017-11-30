@@ -40,9 +40,7 @@
 - name: Append if fail2ban volumes
   set_fact:
     volumes: "{{ volumes  + ['/var/run/fail2ban/fail2ban.sock:/var/run/fail2ban/fail2ban.sock:ro'] }}"
-  when:
-    - telegraf_plugins is defined
-    - "'fail2ban' in telegraf_plugins"
+  when: inventory_hostname in groups['fail2ban']|default([])
 
 - name: Start container
   docker_container:

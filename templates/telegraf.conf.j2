@@ -992,11 +992,13 @@
 
 
 # # Read metrics about docker containers
-# [[inputs.docker]]
+{% if telegraf_plugins is defined %}
+{% if 'docker' in telegraf_plugins %}
+[[inputs.docker]]
 #   ## Docker Endpoint
 #   ##   To use TCP, set endpoint = "tcp://[ip]:[port]"
 #   ##   To use environment variables (ie, docker-machine), set endpoint = "ENV"
-#   endpoint = "unix:///var/run/docker.sock"
+  endpoint = "unix:///var/run/docker.sock"
 #
 #   ## Only collect metrics for these containers, collect all if empty
 #   container_names = []
@@ -1007,7 +1009,7 @@
 #   container_name_exclude = []
 #
 #   ## Timeout for docker list, info, and stats commands
-#   timeout = "5s"
+  timeout = "5s"
 #
 #   ## Whether to report for each container per-device blkio (8:0, 8:1...) and
 #   ## network (eth0, eth1, ...) stats or not
@@ -1028,6 +1030,8 @@
 #   # ssl_key = "/etc/telegraf/key.pem"
 #   ## Use SSL but skip chain & host verification
 #   # insecure_skip_verify = false
+{% endif %}
+{% endif %}
 
 
 # # Read statistics from one or many dovecot servers

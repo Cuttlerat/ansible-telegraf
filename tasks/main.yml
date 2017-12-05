@@ -51,8 +51,6 @@
       hostname: "{{ hostname.stdout }}"
       restart_policy: always
       network_mode: host
-      etc_hosts:
-          influxdb: "{{ metric_server_ip }}"
       env:
           HOST_PROC: /rootfs/proc
           HOST_SYS: /rootfs/sys

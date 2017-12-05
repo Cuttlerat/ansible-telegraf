@@ -51,6 +51,8 @@
       hostname: "{{ hostname.stdout }}"
       restart_policy: always
       network_mode: host
+      etc_hosts:
+          nginx.dreamkas.ru: 127.0.0.1
       env:
           HOST_PROC: /rootfs/proc
           HOST_SYS: /rootfs/sys

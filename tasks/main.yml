@@ -35,7 +35,7 @@
       - "/proc:/rootfs/proc:ro"
       - "/etc:/rootfs/etc:ro"
       - "/var/run/utmp:/var/run/utmp:ro"
-      - "{{ base_dir }}/telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro"
+      #- "{{ base_dir }}/telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro"
 
 - name: Append if fail2ban volumes
   set_fact:
@@ -46,7 +46,7 @@
   docker_container:
       image: "telegraf:{{ telegraf_version }}-custom"
       name: telegraf
-      recreate: "{{ 'yes' if build_image.changed or config_file.changed else 'no' }}"
+      recreate: "{{ 'yes' if build_image.changed else 'no' }}"
       user: root
       hostname: "{{ hostname.stdout }}"
       restart_policy: always

@@ -46,7 +46,7 @@
   docker_container:
       image: "telegraf:{{ telegraf_version }}-custom"
       name: telegraf
-      recreate: "{{ 'yes' if build_image.changed else 'no' }}"
+      recreate: "{{ 'yes' if build_image.changed or hostname.changed else 'no' }}"
       user: root
       hostname: "{{ hostname.stdout }}"
       restart_policy: always

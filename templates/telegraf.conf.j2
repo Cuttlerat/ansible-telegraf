@@ -1015,7 +1015,7 @@
 #   ## network (eth0, eth1, ...) stats or not
 #   perdevice = true
 #   ## Whether to report for each container total blkio and network stats or not
-#   total = false
+  total = false
 #   ## Which environment variables should we use as a tag
 #   ##tag_env = ["JAVA_HOME", "HEAP_SIZE"]
 #
@@ -1824,7 +1824,7 @@
   ## connection with the server and doesn't restrict the databases we are trying
   ## to grab metrics for.
   ##
-  address = "host=localhost user={{ telegraf_postgres_user }} sslmode=disable password={{ telegraf_postgres_pass }}"
+ address = "host=localhost user={{ telegraf_postgres_user }} sslmode=disable password={{ telegraf_postgres_pass }}"
 
   ## A  list of databases to explicitly ignore.  If not specified, metrics for all
   ## databases are gathered.  Do NOT use with the 'databases' option.
@@ -1832,18 +1832,22 @@
 
   ## A list of databases to pull metrics about. If not specified, metrics for all
   ## databases are gathered.  Do NOT use with the 'ignored_databases' option.
-  databases = ["{{ telegraf_postgres_databases }}"]
+ databases = ["{{ telegraf_postgres_databases }}"]
 {% endif %}
 {% endif %}
 
 
 # # Read metrics from one or many postgresql servers
-# [[inputs.postgresql_extensible]]
+{% if telegraf_plugins is defined %}
+{% if 'postgres_ext' in telegraf_plugins %}
+[[inputs.postgresql_extensible]]
 #   ## specify address via a url matching:
 #   ##   postgres://[pqgotest[:password]]@localhost[/dbname]\
 #   ##       ?sslmode=[disable|verify-ca|verify-full]
 #   ## or a simple string:
 #   ##   host=localhost user=pqotest password=... sslmode=... dbname=app_production
+ address = "host=localhost user={{ telegraf_postgres_ext_user }} password={{ telegraf_postgres_ext_pass }}"
+ databases = [{{ telegraf_postgres_ext_databases }}]
 #   #
 #   ## All connection parameters are optional.  #
 #   ## Without the dbname parameter, the driver will default to a database
@@ -1893,6 +1897,15 @@
 #     version=901
 #     withdbname=false
 #     tagvalue="postgresql.stats"
+
+{% for query in telegraf_postgres_ext_queries %}
+  [[inputs.postgresql_extensible.query]]
+     {{ query }}
+{% endfor %}
+{% endif %}
+{% endif %}
+
+
 
 
 # # Read metrics from one or many PowerDNS servers

@@ -1847,7 +1847,9 @@
 #   ## or a simple string:
 #   ##   host=localhost user=pqotest password=... sslmode=... dbname=app_production
  address = "host=localhost user={{ telegraf_postgres_ext_user }} password={{ telegraf_postgres_ext_pass }}"
+{% if telegraf_postgres_ext_databases is defined %}
  databases = [{{ telegraf_postgres_ext_databases }}]
+{% endif %}
 #   #
 #   ## All connection parameters are optional.  #
 #   ## Without the dbname parameter, the driver will default to a database

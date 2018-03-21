@@ -1832,7 +1832,11 @@
 
   ## A list of databases to pull metrics about. If not specified, metrics for all
   ## databases are gathered.  Do NOT use with the 'ignored_databases' option.
- databases = ["{{ telegraf_postgres_databases }}"]
+{% if telegraf_postgres_ext_databases is defined %}
+ databases = ["{{ telegraf_postgres_databases | list | join ("\", \"") }}"]
+{% else %}
+ databases = []
+{% endif %}
 {% endif %}
 {% endif %}
 
@@ -1848,7 +1852,9 @@
 #   ##   host=localhost user=pqotest password=... sslmode=... dbname=app_production
  address = "host=localhost user={{ telegraf_postgres_ext_user }} password={{ telegraf_postgres_ext_pass }}"
 {% if telegraf_postgres_ext_databases is defined %}
- databases = [{{ telegraf_postgres_ext_databases }}]
+ databases = ["{{ telegraf_postgres_ext_databases | list | join ("\", \"") }}"]
+{% else %}
+ databases = []
 {% endif %}
 #   #
 #   ## All connection parameters are optional.  #

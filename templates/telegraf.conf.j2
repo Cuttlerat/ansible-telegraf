@@ -1832,7 +1832,7 @@
 
   ## A list of databases to pull metrics about. If not specified, metrics for all
   ## databases are gathered.  Do NOT use with the 'ignored_databases' option.
-{% if telegraf_postgres_ext_databases is defined %}
+{% if telegraf_postgres_databases is defined %}
  databases = ["{{ telegraf_postgres_databases | list | join ("\", \"") }}"]
 {% else %}
  databases = []

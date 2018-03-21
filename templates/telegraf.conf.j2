@@ -1222,35 +1222,49 @@
 
 
 # # HTTP/HTTPS request given an address a method and a timeout
-# [[inputs.http_response]]
-#   ## Server address (default http://localhost)
-#   # address = "http://localhost"
-#
-#   ## Set response_timeout (default 5 seconds)
-#   # response_timeout = "5s"
-#
-#   ## HTTP Request Method
-#   # method = "GET"
-#
-#   ## Whether to follow redirects from the server (defaults to false)
-#   # follow_redirects = false
-#
-#   ## Optional HTTP Request Body
-#   # body = '''
-#   # {'fake':'data'}
-#   # '''
-#
-#   ## Optional substring or regex match in body of the response
-#   # response_string_match = "\"service_status\": \"up\""
-#   # response_string_match = "ok"
-#   # response_string_match = "\".*_status\".?:.?\"up\""
-#
-#   ## Optional SSL Config
-#   # ssl_ca = "/etc/telegraf/ca.pem"
-#   # ssl_cert = "/etc/telegraf/cert.pem"
-#   # ssl_key = "/etc/telegraf/key.pem"
-#   ## Use SSL but skip chain & host verification
-#   # insecure_skip_verify = false
+{% if telegraf_plugins is defined %}
+{% if 'http_response' in telegraf_plugins %}
+{% for server in telegraf_http_response %}
+[[inputs.http_response]]
+  ## Server address (default http://localhost)
+  address = "{{ server.address }}"
+
+  {% if server.timeout is defined %}
+  ## Set response_timeout (default 5 seconds)
+  response_timeout = "{{ server.timeout }}"
+
+  {% endif %}
+  {% if server.method is defined %}
+  ## HTTP Request Method
+  method = "{{ server.method }}"
+
+  {% endif %}
+  {% if server.follow_redirects is defined %}
+  ## Whether to follow redirects from the server (defaults to false)
+  follow_redirects = {{ server.follow_redirects }}
+
+  {% endif %}
+  {% if server.body is defined %}
+  ## Optional HTTP Request Body
+  body = '''
+  {{ server.body }}
+  '''
+
+  {% endif %}
+  {% if server.string_match is defined %}
+  ## Optional substring or regex match in body of the response
+  response_string_match = "{{ server.string_match }}"
+
+  {% endif %}
+  ## Optional SSL Config
+  # ssl_ca = "/etc/telegraf/ca.pem"
+  # ssl_cert = "/etc/telegraf/cert.pem"
+  # ssl_key = "/etc/telegraf/key.pem"
+  ## Use SSL but skip chain & host verification
+  # insecure_skip_verify = false
+{% endfor %}
+{% endif %}
+{% endif %}
 #
 #   ## HTTP Request Headers (all values must be strings)
 #   # [inputs.http_response.headers]

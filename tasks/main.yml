@@ -20,12 +20,13 @@
     src: "who.sh"
     dest: "{{ base_dir }}/telegraf/who.sh"
     mode: 0555
+  register: who_script
 
 - name: Build image
   docker_image:
       path: "{{ base_dir }}/telegraf"
       name: telegraf
-      force: "{{ 'yes' if config_file.changed else 'no' }}"
+      force: "{{ 'yes' if config_file.changed or who_script.changed else 'no' }}"
       tag: "{{ telegraf_version }}-custom"
   register: build_image
 

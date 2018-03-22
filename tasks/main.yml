@@ -15,6 +15,12 @@
       - Dockerfile
   register: config_file
 
+- name: Copy who.sh script
+  copy:
+    src: "who.sh"
+    dest: "{{ base_dir }}/telegraf/who.sh"
+    mode: 0555
+
 - name: Build image
   docker_image:
       path: "{{ base_dir }}/telegraf"

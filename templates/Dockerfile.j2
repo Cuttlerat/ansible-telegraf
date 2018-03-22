@@ -1,11 +1,10 @@
 FROM telegraf:{{ telegraf_version }}
 
-RUN apk add --update --no-cache coreutils
 COPY ./telegraf.conf /etc/telegraf/telegraf.conf
 COPY ./who.sh /who.sh
 
 {% if groups['fail2ban'] is defined %}
     {% if inventory_hostname in groups['fail2ban'] %}
-RUN apk add --no-cache fail2ban
+RUN apt-get update -y && apt-get install -y fail2ban && rm -rf /var/lib/apt/lists/*
     {% endif %}
 {% endif %}

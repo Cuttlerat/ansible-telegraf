@@ -30,10 +30,6 @@
       tag: "{{ telegraf_version }}-custom"
   register: build_image
 
-- name: Get hostname
-  command: hostname
-  register: hostname
-
 - name: Set volumes
   set_fact:
     volumes:
@@ -55,7 +51,7 @@
       name: telegraf
       recreate: "{{ 'yes' if build_image.changed or hostname.changed or force_update else 'no' }}"
       user: root
-      hostname: "{{ hostname.stdout }}"
+      hostname: "{{ ansible_hostname }}"
       restart_policy: always
       network_mode: host
       etc_hosts:

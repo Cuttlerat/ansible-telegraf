@@ -26,7 +26,7 @@
   docker_image:
       path: "{{ base_dir }}/telegraf"
       name: telegraf
-      force: "{{ 'yes' if config_file.changed or who_script.changed or force_update else 'no' }}"
+      force: "{{ 'yes' if config_file.changed or who_script.changed or force_update | default(false) else 'no' }}"
       tag: "{{ telegraf_version }}-custom"
   register: build_image
 
